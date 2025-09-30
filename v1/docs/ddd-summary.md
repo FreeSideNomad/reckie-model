@@ -1,12 +1,13 @@
-# Domain-Driven Design — Extensive Summary
-## Strategic and Tactical Patterns (Evans 2003 “blue book”, with Fowler commentary)
+# Domain-Driven Design  Extensive Summary
+## Strategic and Tactical Patterns (Evans 2003 blue book, with Fowler commentary)
 
 > This document distills DDD into a practical, teachable reference you can use to guide modeling conversations, architecture choices, and artifact design.
 
 ---
 
 ## 1) Why DDD: the point in one breath
-Domain-Driven Design aligns software with the business domain by **crunching knowledge** together with domain experts, evolving a **ubiquitous language** and a model inside **clear boundaries** so complexity is manageable and change is safe. :contentReference[oaicite:0]{index=0}
+Domain-Driven Design aligns software with the business domain by **crunching knowledge** together with domain experts, evolving a **ubiquitous language** and a model inside **clear boundaries** so complexity is manageable and change is safe.  
+(Source: Eric Evans, *Domain-Driven Design: Tackling Complexity in the Heart of Software*, 2003)
 
 ---
 
@@ -17,141 +18,145 @@ Domain-Driven Design aligns software with the business domain by **crunching kno
 **Why it matters.** Without deliberate knowledge crunching, teams drift into inconsistent terms, leaky abstractions, and accidental complexity; with it, the model gets smaller, tighter, and more expressive.
 
 **How to do it (repeatable prompts).**
-- “List competing abstractions for X; what trade-offs do they imply?”
-- “Which two concepts can we merge without losing behavior?”
-- “Name invariants that must hold; where do they live (aggregate vs policy vs process)?”
-- “What events would other contexts care about when Y changes?”
+- List competing abstractions for X; what trade-offs do they imply?
+- Which two concepts can we merge without losing behavior?
+- Name invariants that must hold; where do they live (aggregate vs policy vs process)?
+- What events would other contexts care about when Y changes?
 
-**Anchor.** Evans introduces knowledge crunching as the heart of DDD; Fowler’s essays echo its centrality. :contentReference[oaicite:1]{index=1}
+**Anchor.** Evans introduces knowledge crunching as the heart of DDD; Fowlers essays echo its centrality.  
+(See [Fowler on Knowledge Crunching](https://martinfowler.com/bliki/KnowledgeLevel.html))
 
 ---
 
-## 3) Strategic DDD — the “big picture”
-
-Strategic design decides **where models live**, **how they relate**, and **what deserves focus**.
+## 3) Strategic DDD  the big picture
 
 ### 3.1 Subdomains
-- **Core**: differentiating value → deserves your best modeling.
+- **Core**: differentiating value  deserves your best modeling.
 - **Supporting**: necessary but not differentiating.
 - **Generic**: commodity; prefer buy/standardize over build.
 
-Use this lens to prioritize attention and investment. :contentReference[oaicite:2]{index=2}
+(Source: Evans, *DDD*, Ch. 14)
 
 ### 3.2 Bounded Context
-A **bounded context** is the boundary within which a model and its ubiquitous language are consistent. The same term can mean different things in different contexts—as long as the boundary is explicit. **This is the central strategic pattern.** :contentReference[oaicite:3]{index=3}
+A **bounded context** is the boundary within which a model and its ubiquitous language are consistent.  
+(See [Fowler: Bounded Context](https://martinfowler.com/bliki/BoundedContext.html))
 
-> Rule of thumb: if a single model tries to serve everyone, it usually serves nobody well. Split by meaning, team, and change cadence. :contentReference[oaicite:4]{index=4}
+> Rule of thumb: if a single model tries to serve everyone, it usually serves nobody well.
 
 ### 3.3 Context Mapping (relationships between contexts)
-Label the relationship so collaboration and integration are explicit:
-
-- **Shared Kernel** — teams share a small, carefully managed subset.
-- **Customer–Supplier** — downstream (customer) influences upstream priorities.
-- **Conformist** — downstream simply conforms to upstream.
-- **Anticorruption Layer (ACL)** — translation to protect your model.
-- **Published Language** — explicit schema/format for integration.
-- **Open Host Service (OHS)** — upstream provides a “hosted” API for many consumers.
-- **Partnership** — tight collaboration across teams.
-- **Separate Ways** — deliberate decoupling.
-- **Big Ball of Mud** — absence of boundaries (warning sign). :contentReference[oaicite:5]{index=5}
+- **Shared Kernel**
+- **CustomerSupplier**
+- **Conformist**
+- **Anticorruption Layer (ACL)**
+- **Published Language**
+- **Open Host Service (OHS)**
+- **Partnership**
+- **Separate Ways**
+- **Big Ball of Mud**  
+(See [Context Mapping Patterns](https://dddcommunity.org/library/vernon_2011/))
 
 ### 3.4 Ubiquitous Language
-A **precise, shared vocabulary** anchored to the model and used in conversations, documentation, and code. Language is **per bounded context**; cross-context translation is a first-class concern. :contentReference[oaicite:6]{index=6}
+A **precise, shared vocabulary** anchored to the model and used in conversations, documentation, and code.  
+(See [Fowler: Ubiquitous Language](https://martinfowler.com/bliki/UbiquitousLanguage.html))
 
-### 3.5 Layered Architecture (bridge from strategy to implementation)
-Evans’ canonical layers separate concerns: **User Interface**, **Application** (orchestration, no business rules), **Domain** (model + rules), **Infrastructure** (plumbing). It keeps your domain pure and portable. :contentReference[oaicite:7]{index=7}
+### 3.5 Layered Architecture
+Evans canonical layers separate concerns: **User Interface**, **Application**, **Domain**, **Infrastructure**.  
+(Source: Evans, *DDD*, Ch. 4)
 
 ---
 
-## 4) Tactical DDD — building blocks *inside* a bounded context
-
-> Tactical patterns work **after** boundaries are in place; otherwise they devolve into tightly coupled mud. :contentReference[oaicite:8]{index=8}
+## 4) Tactical DDD  building blocks
 
 ### 4.1 Entities
-Objects with **identity** that persists through change (e.g., Customer, Order). Keep invariants close, but avoid anemic entities. :contentReference[oaicite:9]{index=9}
+Objects with **identity** that persists through change.  
+(Source: Evans, *DDD*, Ch. 5)
 
 ### 4.2 Value Objects
-**Immutable** objects defined by attributes (e.g., Money, DateRange). Compose liberally; prefer VOs over primitive fields to express meaning. :contentReference[oaicite:10]{index=10}
+**Immutable** objects defined by attributes.  
+(Source: Evans, *DDD*, Ch. 5)
 
-### 4.3 Aggregates & Aggregate Roots
-A consistency boundary with a single **root** that enforces invariants. Keep aggregates **small**; prefer eventual consistency between aggregates. :contentReference[oaicite:11]{index=11}
+### 4.3 Aggregates & Roots
+Consistency boundary with a single **root**.  
+(Source: Evans, *DDD*, Ch. 6)
 
 ### 4.4 Repositories
-Abstract persistence for **aggregate roots** (not for every class). Expose intent-revealing methods (`findById`, `save`). :contentReference[oaicite:12]{index=12}
+Abstract persistence for aggregates.  
+(Source: Evans, *DDD*, Ch. 6)
 
 ### 4.5 Domain Services
-Domain logic that **doesn’t fit** a single entity or value object (stateless, meaningful to the domain). :contentReference[oaicite:13]{index=13}
+Domain logic outside entities/VOs.  
+(Source: Evans, *DDD*, Ch. 7)
 
 ### 4.6 Domain Events
-Named, meaningful facts that **happened** (“PaymentReceived”). Great for integrating bounded contexts and for auditability. :contentReference[oaicite:14]{index=14}
+Named, meaningful facts that happened.  
+(Source: Evans, *DDD*, Ch. 8)
 
 ### 4.7 Factories
-Encapsulate complex creation; keep aggregates valid at birth. :contentReference[oaicite:15]{index=15}
+Encapsulate creation logic.  
+(Source: Evans, *DDD*, Ch. 6)
 
-### 4.8 Specification Pattern (commonly omitted but important)
-Encapsulate a **business predicate** as an object. Compose with AND/OR/NOT; reuse rules across repositories, services, and policies.  
-*Example*: `IsPreferredCustomer = ActiveFor(>2y) AND NoOutstandingBalance`. :contentReference[oaicite:16]{index=16}
+### 4.8 Specification Pattern
+Encapsulate rules/predicates.  
+(Source: Evans, *DDD*, Ch. 9)
 
 ### 4.9 Policy
-A higher-level strategy object that orchestrates specifications and rules for a decision (“ShippingPolicy”, “ReviewPolicy”). :contentReference[oaicite:17]{index=17}
+High-level strategies.  
+(Source: Evans, *DDD*, Ch. 9)
 
-### 4.10 Process Manager / Saga (coordination)
-Coordinates **long-running** interactions across multiple aggregates/contexts; often event-driven. While not a “blue book” chapter heading, it’s widely used in DDD practice to preserve aggregate boundaries without losing flow. (Practice influenced by DDD + messaging literature.) :contentReference[oaicite:18]{index=18}
+### 4.10 Process Manager / Saga
+Coordinates long-running workflows.  
+(Source: Vaughn Vernon, *Implementing DDD*, 2013)
 
 ### 4.11 Modules
-Package model elements for **cohesion and clarity**; name modules in the ubiquitous language. :contentReference[oaicite:19]{index=19}
+Organize concepts for cohesion.  
+(Source: Evans, *DDD*, Ch. 10)
 
 ### 4.12 Refactoring Toward Deeper Insight
-A discipline to routinely reshape the model and language as understanding grows. It’s as essential as any pattern above. :contentReference[oaicite:20]{index=20}
+Continuously reshape the model.  
+(Source: Evans, *DDD*, Ch. 15)
 
 ---
 
-## 5) Practical Heuristics & Trade-offs
+## 5) Heuristics
 
-- **Prefer many small bounded contexts** over one “enterprise model”. :contentReference[oaicite:21]{index=21}
-- **Aggregate size**: small enough for clear invariants and fast transactions; larger only when invariants demand it. :contentReference[oaicite:22]{index=22}
-- **Repositories** return roots; avoid leaking ORM notions through your domain API. :contentReference[oaicite:23]{index=23}
-- **Events** name business facts in ubiquitous language; version them like contracts. :contentReference[oaicite:24]{index=24}
-- **ACL vs Conformist**: if upstream churn/pollution hurts you, add an ACL; if you must move fast and upstream is stable, conformist may be fine. :contentReference[oaicite:25]{index=25}
-
----
-
-## 6) Examples (generic + your context)
-
-> These are illustrative only; keep your concrete model the same as already defined.
-
-### Example A — Retail Orders (generic)
-- Contexts: **Sales** (taking orders), **Fulfillment** (picking/packing), **Billing** (invoices).
-- Map: Sales → (Published Language) → Billing; Sales ↔ Fulfillment via Customer–Supplier.
-- Aggregates: `Order` (lines), `Shipment`, `Invoice`.  
-- Events: `OrderPlaced`, `OrderShipped`, `InvoiceSent`.  
-- Specs/Policies: `EligibleForFreeShipping`, `ReturnPolicy`.
-
-### Example B — AI-assisted requirements (your context)
-- Contexts: **Composition** (creating documents), **Review/Governance**, **Consistency/Impact**.
-- Map: Composition → (Events) → Review; Review → (Events) → Consistency checks.
-- Aggregates: `DocumentVersion` (root), with value objects `Status`, `Lock`, `PromptConfig`.
-- Events: `DocumentSubmittedForReview`, `VersionApproved`.
-- Specs/Policies: `ApprovalThresholdMet`, `EligibleForSubmission`.  
-*(No new document types introduced; this just casts our existing ones in DDD terms.)*
+- Prefer many small bounded contexts.  
+- Keep aggregates small.  
+- Repositories return roots, not ORM.  
+- Events as contracts.  
+- Use ACL when upstream churn threatens you.  
+(See [Fowler on DDD](https://martinfowler.com/bliki/DomainDrivenDesign.html))
 
 ---
 
-## 7) How this informs your project docs
+## 6) Examples
 
-- **design.md** — include:
-  - Strategic: subdomains, bounded contexts, context map (labels like ACL, Conformist, OHS).
-  - Tactical: aggregates + invariants, entities, value objects, repositories, services, events, specifications, policies, process managers.
-- **narrative.md** — tell the story of boundaries and change (why contexts, how events flow).
-- **ubiquitous-language.md** — define terms per context, include cross-context mappings.
-- **meta.md** — make knowledge crunching explicit; add steps for boundary-first design, event naming, spec/policy capture, and periodic refactoring.
+**Retail Orders**  
+- Contexts: Sales, Fulfillment, Billing  
+- Aggregates: Order, Shipment, Invoice  
+- Events: OrderPlaced, OrderShipped  
+
+**AI-assisted Requirements**  
+- Contexts: Composition, Review, Consistency  
+- Aggregates: DocumentVersion  
+- Events: DocumentSubmittedForReview, VersionApproved
 
 ---
 
-## 8) Authoritative References (bookmark these)
+## 7) Application to Artefacts
 
-- **Eric Evans — DDD Reference (free PDF)**: concise, canonical pattern summaries. :contentReference[oaicite:26]{index=26}
-- **Domain Language — DDD Reference landing page**. :contentReference[oaicite:27]{index=27}
-- **Martin Fowler — Bounded Context (bliki)**; **Ubiquitous Language (bliki)**; **DDD overview**. :contentReference[oaicite:28]{index=28}
-- **Context mapping primers** (patterns list and roles). :contentReference[oaicite:29]{index=29}
+- **design.md**  subdomains, contexts, tactical building blocks  
+- **narrative.md**  story of boundaries  
+- **ubiquitous-language.md**  glossary  
+- **meta.md**  process guide
 
+---
+
+## 8) References
+
+- Eric Evans, *Domain-Driven Design: Tackling Complexity in the Heart of Software* (Addison-Wesley, 2003).  
+- [Eric Evans  DDD Reference (PDF)](https://domainlanguage.com/ddd/reference/)  
+- [Domain Language  DDD Reference](https://domainlanguage.com/ddd/)  
+- Martin Fowler  [DDD Overview](https://martinfowler.com/bliki/DomainDrivenDesign.html)  
+- Martin Fowler  [Bounded Context](https://martinfowler.com/bliki/BoundedContext.html)  
+- Martin Fowler  [Ubiquitous Language](https://martinfowler.com/bliki/UbiquitousLanguage.html)  
+- [Context Mapping (Vernon, 2011)](https://dddcommunity.org/library/vernon_2011/)
